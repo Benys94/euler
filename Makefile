@@ -5,7 +5,7 @@ CC := gcc
 CFLAGS := -std=c99 -Wall -Wextra -pedantic 
 
 generator: main.o generator.o 
-	$(CC) $(CFLAGS) $> -o $@ 
+	$(CC) $(CFLAGS) $^ -o $@ 
 
 main.o: main.c 
 	$(CC) $(CFLAGS) -c $< -o $@ 
