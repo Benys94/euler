@@ -21,7 +21,7 @@ int main() {
 	}
   
 	//Create random graph with selected property and parameters
-	graph_generating_manager(matrix, n, e, CONNECTED);
+	graph_generating_manager(matrix, n, e, EULER_TRAIL);
 	//Print the matrix - for debugging
   matrix_printing_manager(n, matrix, false);
   //Free the memory for the matrix
