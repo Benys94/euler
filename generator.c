@@ -48,8 +48,7 @@ void graph_generating_manager(uint8_t *matrix, int nodes, int edges, TProperty p
       connected_random_graph(matrix, nodes, edges);
       break;
     case EULER_TRAIL:
-      //euler_trail_random_graph();
-      //Should be done in near future
+      euler_trail_random_graph(matrix, nodes, edges);
       break;
     case EULER_CYCLE:
       //euler_cycle_random_graph();
@@ -121,6 +120,51 @@ void connected_random_graph(uint8_t *matrix, int nodes, int edges) {
   }
   //Free the memory for aux array
   free(aux_array);
+}
+
+/**
+ * Generator of connected random graphs with euler trails
+ */
+void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
+	int i, j, alone;
+	
+  i = my_random(nodes);
+  alone = nodes - 1;
+  
+  while (alone < edges) {
+    do {
+      j = my_random(nodes);
+    }
+    while (i == j);
+
+    if (!matrix[i * nodes + j]) {
+       matrix[i * nodes + j] = 1;
+       matrix[i * nodes + i] += 1;
+       matrix[j * nodes + i] = 1;
+       matrix[j * nodes + j] += 1;
+       edges--;
+
+       if (matrix[j * nodes + j] == 1) {
+         alone--;
+       }
+       i = j;
+    }
+  }
+
+  j = 0;
+  
+  while (edges) { 
+    while(matrix[j * nodes + j]) {
+      j++;
+    }
+    matrix[i * nodes + j] = 1;
+    matrix[i * nodes + i] += 1;
+    matrix[j * nodes + i] = 1;
+    matrix[j * nodes + j] += 1;
+    edges--;
+    i = j;
+    j++;
+  }
 }
 
 /**
