@@ -133,7 +133,6 @@ void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
 	
   //Generate random vertex and initialize the number of alone vertices
   i = my_random(nodes);
-  printf("First i: %d", i);
   alone = nodes - 1;
   
   //Generating random edges
@@ -199,61 +198,9 @@ void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
  * Every element on the diagonale will contain the number of degree 
  * of the vertex on that row (and column).
  */
-void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges) {
-	int i, j, alone;
-	
-  //Generate random vertex and initialize the number of alone vertices
-  i = my_random(nodes);
-  alone = nodes - 1;
+/*void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges) {
   
-  //Generating random edges
-  while (alone < edges) {
-    //Generate random vertex, not the same as the one before
-    do {
-      j = my_random(nodes);
-    }
-    while (i == j);
-    
-    //Do not rewrite the edges that were already set, write just new edges,
-    //update the number on the diagonale and decrement the number of remaining
-    //edges
-    if (!matrix[i * nodes + j]) {
-       matrix[i * nodes + j] = 1;
-       matrix[i * nodes + i] += 1;
-       matrix[j * nodes + i] = 1;
-       matrix[j * nodes + j] += 1;
-       edges--;
-       
-       //Decrement the number of alone vertices just if the new vertex was
-       //alone before this iteration
-       if (matrix[j * nodes + j] == 1) {
-         alone--;
-       }
-       //Select the last vertex
-       i = j;
-    }
-  }
-  
-  //Reinitialize second index to the beginning for the next cycle
-  j = 0;
-  //Generating remainig edges just for the remainig alone vertices
-  while (edges) { 
-    //Processing just the diagonale of the matrix and searching for zero values
-    while(matrix[j * nodes + j]) {
-      j++;
-    }
-    //Write just new edges, update the number on the diagonale and decrement 
-    //the number of remaining edges
-    matrix[i * nodes + j] = 1;
-    matrix[i * nodes + i] += 1;
-    matrix[j * nodes + i] = 1;
-    matrix[j * nodes + j] += 1;
-    edges--;
-    //Select the last vertex and increment the second index
-    i = j;
-    j++;
-  }
-}
+}*/
 
 /**
  * Function that manages printing the matrix to the output file or stdout 
