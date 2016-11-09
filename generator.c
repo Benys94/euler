@@ -123,45 +123,133 @@ void connected_random_graph(uint8_t *matrix, int nodes, int edges) {
 }
 
 /**
- * Generator of connected random graphs with euler trails
+ * Generator of connected random graphs with Eulerian trails
+ * Every element on the diagonale will contain the number of degree 
+ * of the vertex on that row (and column).
  */
 void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
 	int i, j, alone;
+  const int max_degree = nodes - 1;
 	
+  //Generate random vertex and initialize the number of alone vertices
   i = my_random(nodes);
+  printf("First i: %d", i);
   alone = nodes - 1;
   
+  //Generating random edges
   while (alone < edges) {
+    //Generate random vertex, not the same as the one before
     do {
       j = my_random(nodes);
     }
     while (i == j);
-
+    
+    //Do not rewrite the edges that were already set, write just new edges,
+    //update the number on the diagonale and decrement the number of remaining
+    //edges
     if (!matrix[i * nodes + j]) {
        matrix[i * nodes + j] = 1;
        matrix[i * nodes + i] += 1;
        matrix[j * nodes + i] = 1;
        matrix[j * nodes + j] += 1;
        edges--;
-
+       
+       //Decrement the number of alone vertices just if the new vertex was
+       //alone before this iteration
        if (matrix[j * nodes + j] == 1) {
          alone--;
        }
+       //Select the last vertex
        i = j;
     }
+    
+    //If it cannot continue because of max degree in some node, clear the number
+    //of remaining edges = finish the generating algorithm
+    if (matrix[i * nodes + j] == max_degree) {
+      edges = 0;
+    }
   }
-
-  j = 0;
   
+  //Reinitialize second index to the beginning for the next cycle
+  if (i == 0)
+    j = 1;
+  else
+    j = 0;
+  //Generating remainig edges just for the remainig alone vertices
   while (edges) { 
+    //Processing just the diagonale of the matrix and searching for zero values
     while(matrix[j * nodes + j]) {
       j++;
     }
+    //Write just new edges, update the number on the diagonale and decrement 
+    //the number of remaining edges
     matrix[i * nodes + j] = 1;
     matrix[i * nodes + i] += 1;
     matrix[j * nodes + i] = 1;
     matrix[j * nodes + j] += 1;
     edges--;
+    //Select the last vertex and increment the second index
+    i = j;
+    j++;
+  }
+}
+
+/**
+ * Generator of connected random graphs with Eulerian cycles
+ * Every element on the diagonale will contain the number of degree 
+ * of the vertex on that row (and column).
+ */
+void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges) {
+	int i, j, alone;
+	
+  //Generate random vertex and initialize the number of alone vertices
+  i = my_random(nodes);
+  alone = nodes - 1;
+  
+  //Generating random edges
+  while (alone < edges) {
+    //Generate random vertex, not the same as the one before
+    do {
+      j = my_random(nodes);
+    }
+    while (i == j);
+    
+    //Do not rewrite the edges that were already set, write just new edges,
+    //update the number on the diagonale and decrement the number of remaining
+    //edges
+    if (!matrix[i * nodes + j]) {
+       matrix[i * nodes + j] = 1;
+       matrix[i * nodes + i] += 1;
+       matrix[j * nodes + i] = 1;
+       matrix[j * nodes + j] += 1;
+       edges--;
+       
+       //Decrement the number of alone vertices just if the new vertex was
+       //alone before this iteration
+       if (matrix[j * nodes + j] == 1) {
+         alone--;
+       }
+       //Select the last vertex
+       i = j;
+    }
+  }
+  
+  //Reinitialize second index to the beginning for the next cycle
+  j = 0;
+  //Generating remainig edges just for the remainig alone vertices
+  while (edges) { 
+    //Processing just the diagonale of the matrix and searching for zero values
+    while(matrix[j * nodes + j]) {
+      j++;
+    }
+    //Write just new edges, update the number on the diagonale and decrement 
+    //the number of remaining edges
+    matrix[i * nodes + j] = 1;
+    matrix[i * nodes + i] += 1;
+    matrix[j * nodes + i] = 1;
+    matrix[j * nodes + j] += 1;
+    edges--;
+    //Select the last vertex and increment the second index
     i = j;
     j++;
   }

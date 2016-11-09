@@ -9,7 +9,7 @@
 #include "generator.h"
 
 int main() {
-  int n = 5, e = 8;  //Specifying the number of nodes and edges that would be processed
+  int n = 5, e = 10;  //Specifying the number of nodes and edges that would be processed
 	uint8_t *matrix;
 	
 	//Seed the generator of random numbers
