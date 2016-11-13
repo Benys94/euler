@@ -10,40 +10,90 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "error.h"
 #include "stack.h"
+#include "pool.h"
+
+
+///////////////////
+// Stack wrapper //
+///////////////////
+
+PWrap * wrap_init()
+{
+    PWrap *new_wrap = (PWrap *)MemAcq(sizeof(PWrap));
+    new_wrap -> path = NULL;
+    new_wrap -> next = NULL;
+
+    return new_wrap;
+}
+
+PWrap * push_stack(PWrap *wrapper, SWay *sOpen)
+{
+    PWrap *tmp = (PWrap *)MemAcq(sizeof(PWrap));
+
+    tmp -> path = sOpen;
+
+    tmp -> next = wrapper;
+    wrapper = tmp;
+
+    return wrapper;
+}
+
+PWrap * pop_stack(PWrap *wrapper)
+{
+    return wrapper -> next;
+}
+
+SWay * top_stack(PWrap *wrapper)
+{
+    return wrapper -> path;
+}
+
+bool wrapper_empty(PWrap *wrapper)
+{
+    return (wrapper == NULL ? true : false);
+}
+
+
+///////////////////
+//  Path Stack   //
+///////////////////
 
 /**
  * @brief Initialize stack
  *
  * @param sOpen Stack/list variable
 **/
-void SInit(SList *sOpen)
+SWay * SInit()
 {
-    sOpen -> head =  NULL;
+    SWay *new_way = (SWay *)MemAcq(sizeof(SWay));
+    new_way -> coordinates[0] = 0;
+    new_way -> coordinates[1] = 0;
+    new_way -> next =  NULL;
+
+    return new_way;
 }
 
 /**
  * @brief Push a value to stack
  *
  * @param sOpen stack/list variable
- * @param val New value into stack
- *
- * @return method return true if success, false otherwise
+ * @param from Origin point
+ * @param to Destination point
 **/
-bool SPush(SList *sOpen, char val[])
+SWay * SPush(SWay *sOpen, int from, int to)
 {
-    sitem *tmp = malloc(sizeof(sitem));
-    if(tmp == NULL){
-        fprintf(stderr, "Error: Item malloc has failed. \n\n");
-        return false;
-    }
+    SWay *new_item = (SWay *)MemAcq(sizeof(SWay));
 
-    strcpy(tmp -> path, val);
-    tmp -> path[2] = '\0';
-    tmp -> next = sOpen -> head;
-    sOpen -> head = tmp;
+    // Store path coordinates
+    new_item -> coordinates[0] = from;
+    new_item -> coordinates[1] = to;
 
-    return true;
+    new_item -> next = sOpen;
+    sOpen = new_item;
+
+    return sOpen;
 }
 
 /**
@@ -51,13 +101,9 @@ bool SPush(SList *sOpen, char val[])
  *
  * @param sOpen Stack/list variable
 **/
-void SPop(SList *sOpen)
+void SPop(SWay *sOpen)
 {
-    sitem *tmp = sOpen -> head;
-
-    sOpen -> head = sOpen -> head -> next;
-
-    free(tmp);
+    sOpen = sOpen -> next;
 }
 
 /**
@@ -67,14 +113,14 @@ void SPop(SList *sOpen)
  *
  * @return Method return value from top of a stack
 **/
-char * STop(SList *sOpen)
+int * STop(SWay *sOpen)
 {
-    static char path[3];
+    static int coordinates[2];
 
-    sitem *tmp = sOpen -> head;
-    strcpy(path, tmp -> path);
+    coordinates[0] = sOpen -> coordinates[0];
+    coordinates[1] = sOpen -> coordinates[1];
 
-    return path;
+    return coordinates;
 }
 
 /**
@@ -84,9 +130,9 @@ char * STop(SList *sOpen)
  *
  * @return True if stack is empty, false otherwise
 **/
-bool SEmpty(SList *sOpen)
+bool SEmpty(SWay *sOpen)
 {
-    return (sOpen -> head == NULL ? true : false);
+    return (sOpen == NULL ? true : false);
 }
 
 /**
@@ -97,10 +143,17 @@ bool SEmpty(SList *sOpen)
  *
  * @return true is value is in the stack, false otherwise
 **/
-bool in_stack(SList *sOpen, char val[])
+bool in_stack(SWay *sOpen, int from, int to)
 {
-    for(sitem *tmp = sOpen -> head; tmp != NULL; tmp = tmp -> next){
-        if(strcmp(tmp -> path, val) == 0) return true;
+    // Find out if expanded path is in stack
+    // Check even rotated coordinates
+    for(SWay *tmp = sOpen; tmp -> next != NULL; tmp = tmp -> next){
+        if(tmp -> coordinates[0] == from && tmp -> coordinates[1] == to){
+            return true;
+        }
+        else if(tmp -> coordinates[0] == to && tmp -> coordinates[1] == from){
+            return true;
+        }
     }
 
     return false;

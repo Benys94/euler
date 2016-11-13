@@ -11,21 +11,29 @@
 
 // Item struck
 typedef struct StackItem {
-    char path[3];
+    int coordinates[2];
     struct StackItem *next;
-} sitem;
+} SWay;
 
-// Struct for whole stack
-typedef struct StackList {
-    sitem *head;
-} SList;
+// Stack wrapper
+typedef struct StackStore {
+    SWay *path;
+    struct StackStore *next;
+} PWrap;
 
 // Stack module prototypes
-void SInit(SList *sOpen);
-bool SPush(SList *sOpen, char val[]);
-void SPop(SList *sOpen);
-char *STop(SList *sOpen);
-bool SEmpty(SList *sOpen);
-bool in_stack(SList *sOpen, char val[]);
+SWay * SInit();
+SWay * SPush(SWay *sOpen, int from, int to);
+void SPop(SWay *sOpen);
+int * STop(SWay *sOpen);
+bool SEmpty(SWay *sOpen);
+bool in_stack(SWay *sOpen, int from, int to);
+
+// Stack wrapper prototypes
+PWrap * wrap_init();
+PWrap * push_stack(PWrap * wrapper, SWay *sOpen);
+PWrap * pop_stack(PWrap *wrapper);
+SWay * top_stack(PWrap *wrapper);
+bool wrapper_empty(PWrap * wrapper);
 
 #endif
