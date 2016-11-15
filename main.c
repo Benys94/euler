@@ -9,7 +9,7 @@
 #include "generator.h"
 
 int main() {
-  int n = 5, e = 10;  //Specifying the number of nodes and edges that would be processed
+  int n = 8, e = 13;  //Specifying the number of nodes and edges that would be processed
 	uint8_t *matrix;
 	
 	//Seed the generator of random numbers
@@ -21,7 +21,7 @@ int main() {
 	}
   
 	//Create random graph with selected property and parameters
-	graph_generating_manager(matrix, n, e, EULER_TRAIL);
+	graph_generating_manager(matrix, n, e, EULER_CYCLE);
 	//Print the matrix - for debugging
   matrix_printing_manager(n, matrix, false);
   //Free the memory for the matrix

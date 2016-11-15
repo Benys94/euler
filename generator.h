@@ -34,8 +34,8 @@ void rearrange(int* array, int n);
 void graph_generating_manager(uint8_t *matrix, int nodes, int edges, TProperty property);
 void random_graph(uint8_t *matrix, int nodes, int edges);
 void connected_random_graph(uint8_t *matrix, int nodes, int edges);
-void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges);
-void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges);
+void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges, int *start_node, int *end_node);
+void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges, int *start_node, int *end_node);
 void matrix_printing_manager(int nodes, uint8_t *matrix, bool print_to_stdout);
 void matrix_printer(int nodes, uint8_t *matrix, FILE *output_stream);
 

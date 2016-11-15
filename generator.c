@@ -20,7 +20,7 @@ void swap(int* a1, int *a2 ) {
 }
 
 /**
- * Random number generator, 0...n-1
+ * Random number generator, 0..n-1
  */
 int my_random(int n) {
    return rand() % n;
@@ -40,6 +40,8 @@ void rearrange(int* array, int n) {
  * Function that manages generating the right graph with selected parameters and properties
  */
 void graph_generating_manager(uint8_t *matrix, int nodes, int edges, TProperty property) {
+  int i, j;
+  
   switch (property) {
     case RANDOM:
       random_graph(matrix, nodes, edges);
@@ -48,11 +50,10 @@ void graph_generating_manager(uint8_t *matrix, int nodes, int edges, TProperty p
       connected_random_graph(matrix, nodes, edges);
       break;
     case EULER_TRAIL:
-      euler_trail_random_graph(matrix, nodes, edges);
+      euler_trail_random_graph(matrix, nodes, edges, &i, &j);
       break;
     case EULER_CYCLE:
-      //euler_cycle_random_graph();
-      //Should be done in near future
+      euler_cycle_random_graph(matrix, nodes, edges, &i, &j);
       break;
     default:
       random_graph(matrix, nodes, edges);
@@ -127,12 +128,13 @@ void connected_random_graph(uint8_t *matrix, int nodes, int edges) {
  * Every element on the diagonale will contain the number of degree 
  * of the vertex on that row (and column).
  */
-void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
+void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges, int *start_node, int *end_node) {
 	int i, j, alone;
   const int max_degree = nodes - 1;
 	
   //Generate random vertex and initialize the number of alone vertices
   i = my_random(nodes);
+  *start_node = i;
   alone = nodes - 1;
   
   //Generating random edges
@@ -191,6 +193,8 @@ void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
     i = j;
     j++;
   }
+  
+  *end_node = i;
 }
 
 /**
@@ -198,9 +202,17 @@ void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges) {
  * Every element on the diagonale will contain the number of degree 
  * of the vertex on that row (and column).
  */
-/*void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges) {
-  
-}*/
+void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges, int *start_node, int *end_node) {
+  //At first, generate an Eulerian trail
+  euler_trail_random_graph(matrix, nodes, edges-1, start_node, end_node);
+  //Then, make the last edge from the starting node to the ending node (if it is possible)
+  if (!matrix[*start_node * nodes + *end_node]) {
+    matrix[*start_node * nodes + *end_node] = 1;
+    matrix[*start_node * nodes + *start_node] += 1;
+    matrix[*end_node * nodes + *start_node] = 1;
+    matrix[*end_node * nodes + *end_node] += 1;
+  } 
+}
 
 /**
  * Function that manages printing the matrix to the output file or stdout 
