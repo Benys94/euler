@@ -89,7 +89,7 @@ void connected_random_graph(uint8_t *matrix, int nodes, int edges) {
 	int *aux_array, i, j, k;
 	
 	//Allocate memory for auxilliary array
-	if((aux_array = (int *) malloc(nodes * sizeof(int))) == NULL) {
+	if ((aux_array = (int *) malloc(nodes * sizeof(int))) == NULL) {
 		perror("malloc");
 		exit(1);
 	}

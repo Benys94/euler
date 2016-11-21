@@ -9,13 +9,13 @@
 #include "generator.h"
 
 int main() {
-  int n = 8, e = 13;  //Specifying the number of nodes and edges that would be processed
+  int n = 8, e = 14;  //Specifying the number of nodes and edges that would be processed
 	uint8_t *matrix;
 	
 	//Seed the generator of random numbers
 	srand(time(NULL));
   //Allocate memory for adjacency matrix
-	if((matrix = (uint8_t *) malloc(n * n * sizeof(uint8_t))) == NULL) {
+	if ((matrix = (uint8_t *) calloc(n * n, sizeof(uint8_t))) == NULL) {
 		perror("malloc");
 		exit(1);
 	}
