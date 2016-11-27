@@ -82,7 +82,7 @@ SWay * SInit()
  * @param from Origin point
  * @param to Destination point
 **/
-SWay * SPush(SWay *sOpen, int from, int to)
+SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to)
 {
     SWay *new_item = (SWay *)MemAcq(sizeof(SWay));
 
@@ -113,14 +113,9 @@ void SPop(SWay *sOpen)
  *
  * @return Method return value from top of a stack
 **/
-int * STop(SWay *sOpen)
+unsigned int STop(SWay *sOpen)
 {
-    static int coordinates[2];
-
-    coordinates[0] = sOpen -> coordinates[0];
-    coordinates[1] = sOpen -> coordinates[1];
-
-    return coordinates;
+    return sOpen -> coordinates[1];
 }
 
 /**
@@ -143,7 +138,7 @@ bool SEmpty(SWay *sOpen)
  *
  * @return true is value is in the stack, false otherwise
 **/
-bool in_stack(SWay *sOpen, int from, int to)
+bool in_stack(SWay *sOpen, unsigned int from, unsigned int to)
 {
     // Find out if expanded path is in stack
     // Check even rotated coordinates

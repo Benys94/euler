@@ -11,7 +11,7 @@
 
 // Item struck
 typedef struct StackItem {
-    int coordinates[2];
+    unsigned int coordinates[2];
     struct StackItem *next;
 } SWay;
 
@@ -23,11 +23,11 @@ typedef struct StackStore {
 
 // Stack module prototypes
 SWay * SInit();
-SWay * SPush(SWay *sOpen, int from, int to);
+SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to);
 void SPop(SWay *sOpen);
-int * STop(SWay *sOpen);
+unsigned int STop(SWay *sOpen);
 bool SEmpty(SWay *sOpen);
-bool in_stack(SWay *sOpen, int from, int to);
+bool in_stack(SWay *sOpen, unsigned int from, unsigned int to);
 
 // Stack wrapper prototypes
 PWrap * wrap_init();
