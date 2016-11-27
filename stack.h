@@ -26,6 +26,7 @@ SWay * SInit();
 SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to);
 void SPop(SWay *sOpen);
 unsigned int STop(SWay *sOpen);
+size_t SLen(SWay *sOpen);
 bool SEmpty(SWay *sOpen);
 bool in_stack(SWay *sOpen, unsigned int from, unsigned int to);
 

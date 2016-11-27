@@ -119,6 +119,24 @@ unsigned int STop(SWay *sOpen)
 }
 
 /**
+ * @brief Count number of items in stack Open
+ *
+ * @param sOpen stack Open
+ *
+ * @return Count of items
+**/
+size_t SLen(SWay *sOpen)
+{
+    size_t sLen = 0;
+    for(SWay *tmp = sOpen; tmp -> next != NULL; tmp = tmp -> next){
+        sLen++;
+    }
+
+    // We must decrement by one because we want count of a transitions not nodes
+    return sLen - 1;
+}
+
+/**
  * @brief Check if stack is empty
  *
  * @param sOpen Stack/list variable
