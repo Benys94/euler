@@ -17,9 +17,19 @@ typedef struct myMemory {
     uint8_t dataPtr[];
 } AllocatedMem;
 
+typedef struct MemoryList {
+    void *dataPtr;
+    struct MemoryList *next;
+} MemList;
+
 // Momory pool functions
 void pool_init();               // Memory pool initialize
-void *MemAcq(size_t size);  // Allocate memory into pool
+void *MemAcq(size_t size);      // Allocate memory into pool
 void pool_free(void);           // Release all allocated memory
+
+size_t memWatch();
+void * MemAlloc(size_t size);
+void freeGoalPath(size_t size);
+void freeAll(void);
 
 #endif

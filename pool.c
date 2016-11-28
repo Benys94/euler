@@ -77,3 +77,54 @@ void pool_free(void)
         pool = tmp;
     }
 }
+
+/////////////////////////////////////////////////////
+/// Alternative Pool                              ///
+/////////////////////////////////////////////////////
+
+MemList *actPool = NULL;
+
+void * MemAlloc(size_t size)
+{
+    MemList *new_item = malloc(sizeof(MemList));
+    if(new_item == NULL){
+        FatalError(EC_MEM_ALLOC, "Malloc has failed.");
+    }
+
+    void *data = malloc(size);
+    if(data == NULL){
+        FatalError(EC_MEM_ALLOC, "Malloc has failed.");
+    }
+
+    new_item -> dataPtr = data;
+    new_item -> next = actPool;
+    actPool = new_item;
+
+    return data;
+}
+
+void freeGoalPath(size_t size)
+{
+    MemList *tmp;
+    for(size_t i = 0; i < size; i++){
+        if(actPool != NULL){
+            free(actPool -> dataPtr);
+            actPool -> dataPtr = NULL;
+            tmp = actPool -> next;
+            free(actPool);
+            actPool = tmp;
+        }
+    }
+}
+
+void freeAll()
+{
+    MemList *tmpLast;
+    while (actPool != NULL){
+        free(actPool -> dataPtr);
+        actPool -> dataPtr = NULL;
+        tmpLast = actPool -> next;
+        free(actPool);
+        actPool = tmpLast;
+    }
+}
