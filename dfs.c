@@ -71,6 +71,7 @@ void pathSeeker(PWrap *wrapper, GParams *params, unsigned int actNode, size_t ac
         // If this is a goal print path and search next one
         if(sOpen -> coordinates[1]){
             print_way(sOpen);
+            freeGoalPath(1 + SLen(sOpen) - SLen(wrapper->path));
             pathSeeker(wrapper, params, STop(top_stack(wrapper)), SLen(wrapper -> path));
             return ;
         }
@@ -95,6 +96,7 @@ void pathSeeker(PWrap *wrapper, GParams *params, unsigned int actNode, size_t ac
     // When you can't exapnd anything go back
     if(deadEnd){
         if(wrapper -> path != NULL){
+            freeGoalPath(1 + SLen(sOpen) - SLen(wrapper->path));
             pathSeeker(wrapper, params, STop(top_stack(wrapper)), SLen(wrapper -> path));
         }
         return ;

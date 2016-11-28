@@ -26,7 +26,7 @@
 **/
 PWrap * wrap_init()
 {
-    PWrap *new_wrap = (PWrap *)MemAcq(sizeof(PWrap));
+    PWrap *new_wrap = (PWrap *)MemAlloc(sizeof(PWrap));
     new_wrap -> path = NULL;
     new_wrap -> next = NULL;
 
@@ -43,7 +43,7 @@ PWrap * wrap_init()
 **/
 PWrap * push_stack(PWrap *wrapper, SWay *sOpen)
 {
-    PWrap *tmp = (PWrap *)MemAcq(sizeof(PWrap));
+    PWrap *tmp = (PWrap *)MemAlloc(sizeof(PWrap));
 
     tmp -> path = sOpen;
 
@@ -101,7 +101,7 @@ bool wrapper_empty(PWrap *wrapper)
 **/
 SWay * SInit()
 {
-    SWay *new_way = (SWay *)MemAcq(sizeof(SWay));
+    SWay *new_way = (SWay *)MemAlloc(sizeof(SWay));
     new_way -> coordinates[0] = 0;
     new_way -> coordinates[1] = 0;
     new_way -> next =  NULL;
@@ -118,7 +118,7 @@ SWay * SInit()
 **/
 SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to)
 {
-    SWay *new_item = (SWay *)MemAcq(sizeof(SWay));
+    SWay *new_item = (SWay *)MemAlloc(sizeof(SWay));
 
     // Store path coordinates
     new_item -> coordinates[0] = from;
