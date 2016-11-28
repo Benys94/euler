@@ -12,13 +12,13 @@
 #include <stdbool.h>
 
 typedef struct graphParam{
-    size_t depth;
-    size_t opsLen;
-    unsigned int **ops;
-    bool semiEulerian;
-    unsigned int semiOrigins[2];
+    size_t depth;                   // Max depth I can go into
+    size_t opsLen;                  // Number of operations
+    unsigned int **ops;             // Set of operations
+    bool semiEulerian;              // Is graph Semi-Eulerian or not
+    unsigned int semiOrigins[2];    // Set of origin nodes
 } GParams;
 
-void warmUp(GParams *details);
+void warmUp(GParams *details);      // Call this and start seeking
 
 #endif
