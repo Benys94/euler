@@ -12,11 +12,11 @@
  * Swapping function
  */
 void swap(int* a1, int *a2 ) {
-   int aux;
-
-   aux = *a1;
-   *a1 = *a2;
-   *a2 = aux;
+  int aux;
+  
+  aux = *a1;
+  *a1 = *a2;
+  *a2 = aux;
 }
 
 /**
@@ -32,8 +32,9 @@ int my_random(int n) {
 void rearrange(int* array, int n) {
    int i;
 
-   for (i = 0; i < n - 1; i++)
-      swap(array + i + my_random(n - i), array + i);
+   for (i = 0; i < n - 1; i++) {
+     swap(array + i, array + i + my_random(n - i));
+   }
 }
 
 /**
@@ -236,16 +237,14 @@ void matrix_printing_manager(int nodes, uint8_t *matrix, bool print_to_stdout) {
  * Kind of a little ASCII art
  */
 void matrix_printer(int nodes, uint8_t *matrix, FILE *output_stream) {
-  fprintf(output_stream, "   |");
+  //At first, print the number of nodes
+  fprintf(output_stream, "%d\n", nodes);
+  //Next, print the matrix
 	for (int i = 0; i < nodes; i++) {
-		fprintf(output_stream, "% d |", i);
-	}
-  fprintf(output_stream, "\n");
-	for (int i = 0; i < nodes; i++) {
-		for (int j = 0; j <= nodes; j++) {
+		for (int j = 0; j < nodes; j++) {
 			fprintf(output_stream, "----");
 		}
-		fprintf(output_stream, "\n %d |", i);
+		fprintf(output_stream, "\n");
 		for (int j = 0; j < nodes; j++) {
 			fprintf(output_stream, " %d |", matrix[i * nodes + j]);
 		}
