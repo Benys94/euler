@@ -29,7 +29,7 @@ void pool_free(void);           // Release all allocated memory
 
 size_t memWatch();
 void * MemAlloc(size_t size);
-void freeGoalPath(size_t size);
+void freeOne();
 void freeAll(void);
 
 #endif

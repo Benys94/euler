@@ -103,17 +103,15 @@ void * MemAlloc(size_t size)
     return data;
 }
 
-void freeGoalPath(size_t size)
+void freeOne()
 {
     MemList *tmp;
-    for(size_t i = 0; i < size; i++){
-        if(actPool != NULL){
-            free(actPool -> dataPtr);
-            actPool -> dataPtr = NULL;
-            tmp = actPool -> next;
-            free(actPool);
-            actPool = tmp;
-        }
+    if(actPool != NULL){
+        free(actPool -> dataPtr);
+        actPool -> dataPtr = NULL;
+        tmp = actPool -> next;
+        free(actPool);
+        actPool = tmp;
     }
 }
 

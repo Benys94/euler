@@ -123,6 +123,7 @@ SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to)
     // Store path coordinates
     new_item -> coordinates[0] = from;
     new_item -> coordinates[1] = to;
+    
 
     new_item -> next = sOpen;
     sOpen = new_item;
@@ -135,9 +136,11 @@ SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to)
  *
  * @param sOpen Stack/list variable
 **/
-void SPop(SWay *sOpen)
+SWay *SPop(SWay *sOpen)
 {
     sOpen = sOpen -> next;
+    freeOne();
+    return sOpen;
 }
 
 /**
@@ -167,7 +170,7 @@ size_t SLen(SWay *sOpen)
     }
 
     // We must decrement by one because we want count of a transitions not nodes
-    return sLen - 1;
+    return sLen;
 }
 
 /**
