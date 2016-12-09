@@ -15,12 +15,9 @@
 #include "stack.h"
 #include "pool.h"
 
-int pathCnt = 0;
-
 // Print one way through Eulerian graph
 void print_way(SWay *sOpen)
 {
-    // printf("%zu, %d: "++pathCnt);
     for(SWay *tmp = sOpen; tmp -> next != NULL; tmp = tmp -> next){
         printf("%d", tmp -> coordinates[1]);
         if(tmp -> next -> next != NULL){
