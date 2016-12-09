@@ -16,6 +16,8 @@
 #include "stack.h"
 #include "pool.h"
 
+long int pathCnt = 0;
+
 // Print one way through Eulerian graph
 void print_way(SWay *sOpen)
 {
@@ -47,6 +49,7 @@ void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth)
         // If this is a goal print path and search next one
         if(sOpen -> coordinates[1]){
             print_way(sOpen);
+            pathCnt++;
             return ;
         }
         else {
@@ -76,14 +79,26 @@ void warmUp(GParams *details)
 {
     SWay *origin = SInit();
 
+    bool semiEulerian = (details -> origins[0] == details -> origins[1] ? true : false);
+
+    if(semiEulerian){
+        printf("Searching paths in Semi-Eulerian graph.");
+    }
+    else {
+        printf("Searching paths in Eulerian graph.");
+    }
+
+    printf("\n%zu nodes", details -> nodes);
+    printf("\n%zu edges", details -> depth);
+
     for(int start = 0; start < 2; start++){
         origin = SPush(origin, 0, details -> origins[start]);
         pathSeeker(origin, details, details -> origins[start], 0);
         origin = SPop(origin);
 
-        if(details -> origins[0] == details -> origins[1])
+        if(semiEulerian)
             break;
     }
 
-
+    printf("\n\n%ld founded paths.\n", pathCnt);
 }

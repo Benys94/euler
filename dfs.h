@@ -12,9 +12,10 @@
 #include <stdint.h>
 
 typedef struct graphParam{
+    size_t nodes;                   // Number of nodes
     size_t depth;                   // Max depth I can go into
-    uint8_t **ops;             // Set of operations
-    uint8_t origins[2];        // Set of origin nodes
+    uint8_t **ops;                  // Set of operations
+    uint8_t origins[2];             // Set of origin nodes
 } GParams;
 
 void warmUp(GParams *details);      // Call this and start seeking
