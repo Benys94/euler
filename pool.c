@@ -12,78 +12,16 @@
 #include "error.h"
 #include "pool.h"
 
-#define POOL_SIZE (100000)
-
-AllocatedMem *pool = NULL;
-
-static inline AllocatedMem *PAddPool(size_t size){
-    AllocatedMem *tmp = malloc(sizeof(AllocatedMem) + size);
-    if(tmp == NULL){
-        FatalError(EC_MEM_ALLOC, "Memory allocation has failed.");
-    }
-
-    tmp -> capacity = size;
-    tmp -> used = 0;
-
-    return tmp;
-}
-
-/**
- * @brief Initialize memory pool
-**/
-void pool_init()
-{
-    pool = malloc(sizeof(AllocatedMem) + POOL_SIZE);
-    if(pool == NULL){
-        FatalError(EC_MEM_ALLOC, "Memory pool allocation has failed.");
-    }
-
-    pool -> capacity = POOL_SIZE;
-    pool -> used = 0;
-    pool -> next = NULL;
-}
-
-/**
- * @brief Allocate memory and store it in the pool
- *
- * @param size Size of the requested memory
- *
- * @return Method return void pointer to allocated memory which should be retyped
-**/
-void *MemAcq(size_t size)
-{
-    // If pool is exausted create next one.
-    if((pool -> capacity - pool -> used) < size){
-        AllocatedMem *old = pool;
-
-        size_t newSize = ((pool -> capacity << 1) >= size ? (pool -> capacity << 1) : size);
-        pool = PAddPool(newSize);
-        pool -> next = old;
-    }
-
-    void *tmp = pool -> dataPtr + pool -> used;
-    pool -> used += size;
-    return tmp;
-}
-
-/**
- * @brief Free all allocated memory in the pool
-**/
-void pool_free(void)
-{
-    while(pool != NULL){
-        AllocatedMem *tmp = pool -> next;
-        free(pool);
-        pool = tmp;
-    }
-}
-
-/////////////////////////////////////////////////////
-/// Alternative Pool                              ///
-/////////////////////////////////////////////////////
-
+// List of allocated momory blocks
 MemList *actPool = NULL;
 
+/**
+ * @brief Memory allocator
+ *
+ * @param size Size of requested memory
+ *
+ * @return Block of allocated memory which is need to be retyped
+**/
 void * MemAlloc(size_t size)
 {
     MemList *new_item = malloc(sizeof(MemList));
@@ -103,6 +41,9 @@ void * MemAlloc(size_t size)
     return data;
 }
 
+/**
+ * @brief This will free one block of memory (for poping from stack)
+**/
 void freeOne()
 {
     MemList *tmp;
@@ -115,6 +56,9 @@ void freeOne()
     }
 }
 
+/**
+ * @brief Free all alocated memory (call only at the end or on error state)
+**/
 void freeAll()
 {
     MemList *tmpLast;
