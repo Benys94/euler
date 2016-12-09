@@ -1,13 +1,5 @@
-CC = gcc
-CFLAGS = -pedantic -Wall -Wextra
-SOURCES = $(wildcard *.c)
-OBJECTS = $(SOURCES:.c=.o)
-PROGRAMS = euler
-
-all: euler
-
-euler: $(OBJECTS)
-	$(CC) $(CFLAGS) $^ -o $@
-
+all: euler_input
+iptv_monitor: euler_input.c
+	gcc -Wextra -pedantic -Wall$^ -o $@
 clean:
-	rm *.o $(PROGRAMS)
+	rm -f euler_input
