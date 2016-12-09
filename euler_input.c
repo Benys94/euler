@@ -4,10 +4,13 @@
 #include <stddef.h>
 #include <string.h>
 #include <ctype.h>
+#include "dfs.h"
 
-int check_array(unsigned int **ui, int el)
+int check_array(uint8_t **ui, int el)
 {
-	int i, j, cnt, odd=0, even=0;
+	int i, j, cnt, cnt2=0, odd=0, even=0, totalCnt=0;
+	struct graphParam* graph;
+	graph = malloc(sizeof(struct graphParam));
 
 	// setting diagonal to 0
 	for(i=0; i<el; i++)
@@ -32,17 +35,58 @@ int check_array(unsigned int **ui, int el)
 		{			
 			printf("Graph is not continuous.\n");
 			return 0;
-		}	
+		}
+
+	
 		// checking if graph is euler path or euler cycle			
 		if(cnt%2==1) // count odd rows
+		{
 			odd++;
+			if(odd>2)
+			{
+				printf("Graph is not euler. More than 3 odd nodes.\n");
+				return 0;
+			}
+			graph->origins[odd-1]=i+1; // getting starting and ending node for euler path
+		}		
 		if(cnt%2==0) // count even rows
 			even++;
+		totalCnt+=cnt;
 	}
+	graph->depth=totalCnt/2; // getting graph depth to structure
+	
+	int graphNodes[graph->depth][2];
+	cnt=0;
+	for(i=0; i<el; i++)
+	{
+		for(j=cnt; j<el; j++)
+		{
+			if (ui[i][j] == 1)
+			{
+				graphNodes[cnt2][0]=i+1;
+				graphNodes[cnt2][1]=j+1;
+				cnt2++;
+			}
+		}
+		cnt++;
+	}
+
+	/*
+	for (i=0; i<graph->depth; i++) 						// print
+	{
+		for(j=0; j<2; j++)
+		{
+			printf(" %d", graphNodes[i][j]);		
+		}
+		printf(" \n");
+	}
+	*/
 
 	if(odd==2) {
 		return 1; // graph is euler path
-	} else if(odd==0 && even>0) {
+	} else if(odd==0 && even==el) {
+		graph->origins[0]=1; // getting starting and ending node for euler cycle
+		graph->origins[1]=1;
 		return 2; // graph is euler cycle
 	} else {
 		return 0; // graph is not euler graph	
@@ -52,12 +96,13 @@ int check_array(unsigned int **ui, int el)
 
 int main(int argc, char *argv[])
 {
-	unsigned int **ui;
-	unsigned int el;
+	uint8_t **ui;
+	uint8_t el;
 	int i, j;
 	char file_name[50]; // max length of file name
 	FILE *fp;
 	int c;
+	int tmp;
 
 	if(argc!=2)
 	{
@@ -84,14 +129,14 @@ int main(int argc, char *argv[])
 	c = fgetc(fp);
 	}
 	while (isspace(c) || c==10);
-	
+
 	// allocation size of array 
-    ui = (unsigned int **) malloc(el * (sizeof(unsigned int *)));
+    ui = (uint8_t **) malloc(el * (sizeof(uint8_t *)));
     if (ui == NULL)
         return 1;
 
     for (i = 0; i < el; i++) {
-        ui[i] = (unsigned int *) malloc(el * (sizeof(unsigned int)));
+        ui[i] = (uint8_t *) malloc(el * (sizeof(uint8_t)));
         if (ui[i] == NULL)
             return 1;
     }
@@ -110,8 +155,8 @@ int main(int argc, char *argv[])
 			ui[i][j] = 1;
 		}
 	}
-
-	for (i=0; i<el; i++) 						// print (smazat)
+	/*
+	for (i=0; i<el; i++) 						// print
 	{
 		for(j=0; j<el; j++)
 		{
@@ -119,18 +164,19 @@ int main(int argc, char *argv[])
 		}
 		printf(" \n");
 	}
-		
-	if(check_array(ui, el) == 1)
+	*/	
+	tmp = check_array(ui, el);
+	if(tmp == 1)
 	{		
 		printf("It is euler path. \n");
 		return 1;
 	}	
-	if(check_array(ui, el) == 2)
+	else if(tmp == 2)
 	{		
 		printf("It is euler cycle. \n");
 		return 1;
 	}
-	if(check_array(ui, el) == 0)
+	else if(tmp == 0)
 	{
 		printf("It is not euler graph. \n");
 		return 0;
