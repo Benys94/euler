@@ -14,6 +14,7 @@
 void FatalError(ERROR_CODE errCode, char *errMsg)
 {
     fprintf(stderr, "Error: %s \n\n", errMsg);
-    pool_free();
+    // pool_free();
+    freeAll();
     exit(errCode);
 }
