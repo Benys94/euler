@@ -43,7 +43,6 @@ void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth)
 {
     // Deep meter
     actDepth++;
-
     // Check if actual node is a goal
     if(actDepth == params -> depth + 1){
         // If this is a goal print path and search next one
@@ -79,7 +78,7 @@ void warmUp(GParams *details)
 {
     SWay *origin = SInit();
 
-    bool semiEulerian = (details -> origins[0] == details -> origins[1] ? true : false);
+    bool semiEulerian = (details -> origins[0] != details -> origins[1] ? true : false);
 
     if(semiEulerian){
         printf("Searching paths in Semi-Eulerian graph.");
@@ -89,14 +88,15 @@ void warmUp(GParams *details)
     }
 
     printf("\n%zu nodes", details -> nodes);
-    printf("\n%zu edges", details -> depth);
+    printf("\n%zu edges\n\n", details -> depth);
+
 
     for(int start = 0; start < 2; start++){
         origin = SPush(origin, 0, details -> origins[start]);
         pathSeeker(origin, details, details -> origins[start], 0);
         origin = SPop(origin);
 
-        if(semiEulerian)
+        if( ! semiEulerian)
             break;
     }
 
