@@ -17,23 +17,6 @@
 
 int pathCnt = 0;
 
-// Method prints stack content into log file
-void stack_dump(PWrap *wrapper)
-{
-    FILE *logFile = fopen("log.txt", "w");
-    fprintf(logFile, "[\n");
-    for(PWrap *tmpWrap = wrapper; tmpWrap -> next != NULL; tmpWrap = tmpWrap -> next){
-        fprintf(logFile, "\t[\n");
-        for(SWay *tmpWay = tmpWrap -> path; tmpWay -> next != NULL; tmpWay = tmpWay -> next){
-            fprintf(logFile, "\t\t[%d, %d]\n", tmpWay -> coordinates[0], tmpWay -> coordinates[1]);
-        }
-        fprintf(logFile, "\t],\n");
-    }
-    fprintf(logFile, "]\n");
-
-    fclose(logFile);
-}
-
 // Print one way through Eulerian graph
 void print_way(SWay *sOpen)
 {
@@ -76,7 +59,7 @@ void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDe
     }
 
     // Expand actual node
-    for(size_t i = 0; i < params -> opsLen; i++){
+    for(size_t i = 0; i < params -> depth * 2; i++){
         if(actNode == params -> ops[i][0]){
             // Expand operation if isn't already in stack
             if( ! in_stack(sOpen, params -> ops[i][0], params -> ops[i][1])){
@@ -98,7 +81,7 @@ void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDe
 void warmUp(GParams *details)
 {
     SWay *origin = SInit();
-    if(details -> origins[0] == origins[1]){
+    if(details -> origins[0] == details -> origins[1]){
         for(int start = 0; start < 2; start++){
             origin = SPush(origin, 0, details -> origins[start]);
             pathSeeker(origin, details, details -> origins[start], 0);

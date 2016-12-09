@@ -15,12 +15,6 @@ typedef struct StackItem {
     struct StackItem *next;
 } SWay;
 
-// Stack wrapper
-typedef struct StackStore {
-    SWay *path;
-    struct StackStore *next;
-} PWrap;
-
 // Stack module prototypes
 SWay * SInit();
 SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to);
@@ -29,12 +23,5 @@ unsigned int STop(SWay *sOpen);
 size_t SLen(SWay *sOpen);
 bool SEmpty(SWay *sOpen);
 bool in_stack(SWay *sOpen, unsigned int from, unsigned int to);
-
-// Stack wrapper prototypes
-PWrap * wrap_init();
-PWrap * push_stack(PWrap * wrapper, SWay *sOpen);
-PWrap * pop_stack(PWrap *wrapper);
-SWay * top_stack(PWrap *wrapper);
-bool wrapper_empty(PWrap * wrapper);
 
 #endif

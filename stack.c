@@ -16,81 +16,6 @@
 
 
 ///////////////////
-// Stack wrapper //
-///////////////////
-
-/**
- * @brief Init wrapper for stacks
- *
- * @return New wrapper
-**/
-PWrap * wrap_init()
-{
-    PWrap *new_wrap = (PWrap *)MemAlloc(sizeof(PWrap));
-    new_wrap -> path = NULL;
-    new_wrap -> next = NULL;
-
-    return new_wrap;
-}
-
-/**
- * @brief Store stack into wrapper
- *
- * @param wrapper Stack Store
- * @param sOpen Open stack for path
- *
- * @return Edited wrapper
-**/
-PWrap * push_stack(PWrap *wrapper, SWay *sOpen)
-{
-    PWrap *tmp = (PWrap *)MemAlloc(sizeof(PWrap));
-
-    tmp -> path = sOpen;
-
-    tmp -> next = wrapper;
-    wrapper = tmp;
-
-    return wrapper;
-}
-
-/**
- * @brief Throw away stack from wrapper
- *
- * @param wrapper Wrapper for stacks
- *
- * @return Edited wrapper
-**/
-PWrap * pop_stack(PWrap *wrapper)
-{
-    return wrapper -> next;
-}
-
-/**
- * @brief Get top stack from wrapper
- *
- * @param wrapper Wrapper for stacks
- *
- * @return Open stack from top of a wrapper
-**/
-SWay * top_stack(PWrap *wrapper)
-{
-    return wrapper -> path;
-}
-
-/**
- * @brief Determine if stack is empty
- *
- * @param wrapper Wrapper for stacks
- *
- * @return true if wrapper is empty, false otherwise
-**/
-bool wrapper_empty(PWrap *wrapper)
-{
-    return (wrapper == NULL ? true : false);
-}
-
-
-///////////////////
 //  Path Stack   //
 ///////////////////
 
@@ -123,7 +48,7 @@ SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to)
     // Store path coordinates
     new_item -> coordinates[0] = from;
     new_item -> coordinates[1] = to;
-    
+
 
     new_item -> next = sOpen;
     sOpen = new_item;
