@@ -71,6 +71,13 @@ int check_array(uint8_t **ui, int el)
 		cnt++;
 	}
 
+    graph -> ops = (unsigned int**)malloc(sizeof(unsigned int *) * graph->depth * 2);
+
+    for(i=0; i<graph->depth*2; i++){
+        graph->ops[i] = (unsigned int *)malloc(sizeof(unsigned int) * 2);
+        graph->ops[i][0] = graphNodes[i][0];
+        graph->ops[i][1] = graphNodes[i][1];
+    }
 	/*
 	for (i=0; i<graph->depth; i++) 						// print
 	{
@@ -81,7 +88,7 @@ int check_array(uint8_t **ui, int el)
 		printf(" \n");
 	}
 	*/
-
+	
 	if(odd==2) {
 		return 1; // graph is euler path
 	} else if(odd==0 && even==el) {
