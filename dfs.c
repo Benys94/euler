@@ -78,7 +78,7 @@ void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDe
 void warmUp(GParams *details)
 {
     SWay *origin = SInit();
-    if(details -> origins[0] == details -> origins[1]){
+    if(details -> origins[0] != details -> origins[1]){
         for(int start = 0; start < 2; start++){
             origin = SPush(origin, 0, details -> origins[start]);
             pathSeeker(origin, details, details -> origins[start], 0);
