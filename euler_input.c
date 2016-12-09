@@ -6,9 +6,9 @@
 #include <ctype.h>
 #include "dfs.h"
 
-int check_array(uint8_t **ui, int el)
+int check_array(uint8_t **ui, size_t el)
 {
-	int i, j, cnt, cnt2=0, odd=0, even=0, totalCnt=0;
+	size_t i, j, cnt, cnt2=0, odd=0, even=0, totalCnt=0;
 	struct graphParam* graph;
 	graph = malloc(sizeof(struct graphParam));
 
@@ -55,7 +55,7 @@ int check_array(uint8_t **ui, int el)
 	}
 	graph->depth=totalCnt/2; // getting graph depth to structure
 	
-	int graphNodes[graph->depth][2];
+	size_t graphNodes[graph->depth][2];
 	cnt=0;
 	for(i=0; i<el; i++)
 	{
@@ -71,10 +71,10 @@ int check_array(uint8_t **ui, int el)
 		cnt++;
 	}
 
-    graph -> ops = (unsigned int**)malloc(sizeof(unsigned int *) * graph->depth * 2);
+    graph -> ops = (uint8_t**)malloc(sizeof(uint8_t *) * graph->depth * 2);
 
     for(i=0; i<graph->depth*2; i++){
-        graph->ops[i] = (unsigned int *)malloc(sizeof(unsigned int) * 2);
+        graph->ops[i] = (uint8_t *)malloc(sizeof(uint8_t) * 2);
         graph->ops[i][0] = graphNodes[i][0];
         graph->ops[i][1] = graphNodes[i][1];
     }
@@ -104,12 +104,12 @@ int check_array(uint8_t **ui, int el)
 int main(int argc, char *argv[])
 {
 	uint8_t **ui;
-	uint8_t el;
-	int i, j;
+	size_t el;
+	size_t i, j;
 	char file_name[50]; // max length of file name
 	FILE *fp;
 	int c;
-	int tmp;
+	size_t tmp;
 
 	if(argc!=2)
 	{
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-	if (fscanf(fp, "%d", &el) != 1) // reading size of array
+	if (fscanf(fp, "%zu", &el) != 1) // reading size of array
 	{
         printf("Error in reading size of array\n");
         return 1;
