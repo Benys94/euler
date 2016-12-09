@@ -5,12 +5,12 @@
 #include <string.h>
 #include <ctype.h>
 #include "dfs.h"
+#include "pool.h"
 
 int check_array(uint8_t **ui, size_t el)
 {
 	size_t i, j, cnt, cnt2=0, odd=0, even=0, totalCnt=0;
-	struct graphParam* graph;
-	graph = malloc(sizeof(struct graphParam));
+	GParams *graph = (GParams *)MemAlloc(sizeof(GParams));
 
 	// setting diagonal to 0
 	for(i=0; i<el; i++)
@@ -71,13 +71,14 @@ int check_array(uint8_t **ui, size_t el)
 		cnt++;
 	}
 
-    graph -> ops = (uint8_t**)malloc(sizeof(uint8_t *) * graph->depth * 2);
+	graph -> ops = (uint8_t**)MemAlloc(sizeof(uint8_t *) * graph->depth * 2);
 
-    for(i=0; i<graph->depth*2; i++){
-        graph->ops[i] = (uint8_t *)malloc(sizeof(uint8_t) * 2);
-        graph->ops[i][0] = graphNodes[i][0];
-        graph->ops[i][1] = graphNodes[i][1];
+	for(i=0; i<graph->depth*2; i++){
+		graph->ops[i] = (uint8_t *)MemAlloc(sizeof(uint8_t) * 2);
+		graph->ops[i][0] = graphNodes[i][0];
+		graph->ops[i][1] = graphNodes[i][1];
     }
+	warmUp(graph);
 	/*
 	for (i=0; i<graph->depth; i++) 						// print
 	{
@@ -138,12 +139,12 @@ int main(int argc, char *argv[])
 	while (isspace(c) || c==10);
 
 	// allocation size of array 
-    ui = (uint8_t **) malloc(el * (sizeof(uint8_t *)));
+    ui = (uint8_t **) MemAlloc(el * (sizeof(uint8_t *)));
     if (ui == NULL)
         return 1;
 
     for (i = 0; i < el; i++) {
-        ui[i] = (uint8_t *) malloc(el * (sizeof(uint8_t)));
+        ui[i] = (uint8_t *) MemAlloc(el * (sizeof(uint8_t)));
         if (ui[i] == NULL)
             return 1;
     }
@@ -193,9 +194,8 @@ int main(int argc, char *argv[])
 
 	for (i = 0; i < el; i++) // free memory
 	{
-        free(ui[i]);
     }
-    free(ui);
+    freeAll();
  
     return 0;
 }
