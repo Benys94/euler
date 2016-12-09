@@ -9,14 +9,10 @@ int check_array(unsigned int **ui, int el)
 {
 	int i, j, cnt, odd=0, even=0;
 
-	// checking for point loop (all 0 on diagonal)
+	// setting diagonal to 0
 	for(i=0; i<el; i++)
 	{
-		if(ui[i][i]!=0)
-		{
-			printf("Graph is not euler graph (A->A).\n");
-			return 0;
-		}
+		ui[i][i]=0; 
 	}
 	
 	for (i=0; i<el; i++)
