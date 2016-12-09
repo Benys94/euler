@@ -60,9 +60,11 @@ void print_way(SWay *sOpen)
 **/
 void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDepth)
 {
+    // Deep meter
+    actDepth++;
 
     // Check if actual node is a goal
-    if(actDepth == params -> depth){
+    if(actDepth == params -> depth + 1){
         // If this is a goal print path and search next one
         if(sOpen -> coordinates[1]){
             print_way(sOpen);
@@ -73,11 +75,7 @@ void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDe
         }
     }
 
-    // Deep meter
-    actDepth++;
-
     // Expand actual node
-    // bool deadEnd = true;
     for(size_t i = 0; i < params -> opsLen; i++){
         if(actNode == params -> ops[i][0]){
             // Expand operation if isn't already in stack
@@ -100,10 +98,10 @@ void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDe
 void warmUp(GParams *details)
 {
     SWay *origin = SInit();
-    if(details -> semiEulerian){
+    if(details -> origins[0] == origins[1]){
         for(int start = 0; start < 2; start++){
-            origin = SPush(origin, 0, details -> semiOrigins[start]);
-            pathSeeker(origin, details, details -> semiOrigins[start], 0);
+            origin = SPush(origin, 0, details -> origins[start]);
+            pathSeeker(origin, details, details -> origins[start], 0);
             origin = SPop(origin);
         }
     }

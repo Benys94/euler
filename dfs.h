@@ -13,10 +13,8 @@
 
 typedef struct graphParam{
     size_t depth;                   // Max depth I can go into
-    size_t opsLen;                  // Number of operations
     unsigned int **ops;             // Set of operations
-    bool semiEulerian;              // Is graph Semi-Eulerian or not
-    unsigned int semiOrigins[2];    // Set of origin nodes
+    unsigned int origins[2];        // Set of origin nodes
 } GParams;
 
 void warmUp(GParams *details);      // Call this and start seeking
