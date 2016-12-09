@@ -7,6 +7,7 @@
 **/
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -41,7 +42,7 @@ SWay * SInit()
  * @param from Origin point
  * @param to Destination point
 **/
-SWay * SPush(SWay *sOpen, unsigned int from, unsigned int to)
+SWay * SPush(SWay *sOpen, uint8_t from, uint8_t to)
 {
     SWay *new_item = (SWay *)MemAlloc(sizeof(SWay));
 
@@ -75,7 +76,7 @@ SWay *SPop(SWay *sOpen)
  *
  * @return Method return value from top of a stack
 **/
-unsigned int STop(SWay *sOpen)
+uint8_t STop(SWay *sOpen)
 {
     return sOpen -> coordinates[1];
 }
@@ -118,7 +119,7 @@ bool SEmpty(SWay *sOpen)
  *
  * @return true is value is in the stack, false otherwise
 **/
-bool in_stack(SWay *sOpen, unsigned int from, unsigned int to)
+bool in_stack(SWay *sOpen, uint8_t from, uint8_t to)
 {
     // Find out if expanded path is in stack
     // Check even rotated coordinates

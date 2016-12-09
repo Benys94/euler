@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 
 #include "dfs.h"
@@ -19,7 +20,7 @@
 void print_way(SWay *sOpen)
 {
     for(SWay *tmp = sOpen; tmp -> next != NULL; tmp = tmp -> next){
-        printf("%d", tmp -> coordinates[1]);
+        printf("%u", tmp -> coordinates[1]);
         if(tmp -> next -> next != NULL){
             printf(" -> ");
         }
@@ -35,10 +36,8 @@ void print_way(SWay *sOpen)
  * @param params Details of a graph
  * @param actNode Node where is algorithm located right now
  * @param actDepth Actual depth
- *
- * @bug Big memory consumption
 **/
-void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDepth)
+void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth)
 {
     // Deep meter
     actDepth++;
@@ -72,18 +71,19 @@ void pathSeeker(SWay *sOpen, GParams *params, unsigned int actNode, size_t actDe
  * @brief Preparing for path seeking
  *
  * @param details Eulerian graph details
- *
- * @bug Seeking paths only in semi-eulerian graphs
 **/
 void warmUp(GParams *details)
 {
     SWay *origin = SInit();
-    if(details -> origins[0] != details -> origins[1]){
-        for(int start = 0; start < 2; start++){
-            origin = SPush(origin, 0, details -> origins[start]);
-            pathSeeker(origin, details, details -> origins[start], 0);
-            origin = SPop(origin);
-        }
+
+    for(int start = 0; start < 2; start++){
+        origin = SPush(origin, 0, details -> origins[start]);
+        pathSeeker(origin, details, details -> origins[start], 0);
+        origin = SPop(origin);
+
+        if(details -> origins[0] == details -> origins[1])
+            break;
     }
+
 
 }
