@@ -47,9 +47,10 @@ void random_graph(uint8_t *matrix, int nodes, int edges);
 void connected_random_graph(uint8_t *matrix, int nodes, int edges);
 void euler_trail_random_graph(uint8_t *matrix, int nodes, int edges, int *start_node, int *end_node);
 void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges, int *start_node, int *end_node);
+void reset_diagonale(uint8_t *matrix, int nodes);
 void matrix_printing_manager(int nodes, uint8_t *matrix, bool print_to_stdout);
 void matrix_printer(int nodes, uint8_t *matrix, FILE *output_stream);
-void checkArgs(int argc, char *argv[], int *nodes, int *edges, TProperty *property);
+void parse_args(int argc, char *argv[], int *nodes, int *edges, TProperty *property);
 void print_help(TErrCode err);
 
 #endif /* GENERATOR_H */

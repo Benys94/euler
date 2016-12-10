@@ -9,12 +9,12 @@
 #include "generator.h"
 
 int main(int argc, char *argv[]) {
-  int n, e;  //Specifying the number of nodes and edges that would be processed
-  TProperty property;
-	uint8_t *matrix;
+  int n, e;  //nodes and edges
+  TProperty property; //graph property
+	uint8_t *matrix; //graph represented by adjacency matrix
 	
-  //Checking arguments
-  checkArgs(argc, argv, &n, &e, &property);
+  //Parse arguments
+  parse_args(argc, argv, &n, &e, &property);
 	//Seed the generator of random numbers
 	srand(time(NULL));
   //Allocate memory for adjacency matrix
@@ -22,9 +22,10 @@ int main(int argc, char *argv[]) {
 		perror("malloc");
 		exit(1);
 	}
-  
 	//Create random graph with selected property and parameters
 	graph_generating_manager(matrix, n, e, property);
+  //Reset the diagonale of the matrix
+  reset_diagonale(matrix, n);
 	//Print the matrix - for debugging
   matrix_printing_manager(n, matrix, false);
   //Free the memory for the matrix

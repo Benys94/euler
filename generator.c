@@ -11,7 +11,7 @@
 /**
  * Function for checking arguments
  */
-void checkArgs(int argc, char *argv[], int *nodes, int *edges, TProperty *property) {
+void parse_args(int argc, char *argv[], int *nodes, int *edges, TProperty *property) {
   char *error;
   
   if (argc == 1 || (argc == 2 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))) {
@@ -60,19 +60,29 @@ void print_help(TErrCode err) {
       exitCode = 0;
       break;
     case ARG_NUM:
-      fprintf(stderr, "Bad number of arguments!\n\n");
+      fprintf(stderr, "\nBad number of arguments!\n\n");
       break;
     case NODES:
-      fprintf(stderr, "Bad number of nodes!\n\n");
+      fprintf(stderr, "\nBad number of nodes!\n\n");
       break;
     case EDGES:
-      fprintf(stderr, "Bad number of edges!\n\n");
+      fprintf(stderr, "\nBad number of edges!\n\n");
       break;
     case PROPERTY:
-      fprintf(stderr, "Bad graph property!\n\n");
+      fprintf(stderr, "\nBad graph property!\n\n");
       break;
   }
-  printf("Help\n");
+  printf (
+    "Usage:\n"
+    "generator <n> <e> (-r | -c | -e | -E)\n"
+    "generator -h | --help\n\n"
+    "Options:\n"
+    "-h --help            Show this screen.\n"
+    "-r --random          Generate random graph.\n"
+    "-r --connected       Generate connected random graph.\n"
+    "-e --eulerian-trail  Generate random graph with eulerian trail.\n"
+    "-e --eulerian-cycle  Generate random graph with eulerian cycle.\n"
+  );
   exit(exitCode);
 }
 
@@ -280,7 +290,16 @@ void euler_cycle_random_graph(uint8_t *matrix, int nodes, int edges, int *start_
     matrix[*start_node * nodes + *start_node] += 1;
     matrix[*end_node * nodes + *start_node] = 1;
     matrix[*end_node * nodes + *end_node] += 1;
-  } 
+  }
+}
+
+/**
+ * Function for reseting matrix diagonale
+ */
+void reset_diagonale(uint8_t *matrix, int nodes) {
+  for (int i = 0; i < nodes; i++) {
+		matrix[i * nodes + i] = 0;
+	}
 }
 
 /**
