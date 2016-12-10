@@ -1,3 +1,6 @@
+#File: Makefile
+#Description: Makefile for main program.
+#Author: Jan Morávek <xmorav33@stud.fit.vutbr.cz>
 CC = gcc
 CFLAGS = -pedantic -Wall -Wextra -std=c99
 SOURCES = $(wildcard *.c)
@@ -10,7 +13,7 @@ euler: $(OBJECTS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 %.o: %.c
-	gcc $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
 	rm *.o $(PROGRAMS) 2>/dev/null || true
