@@ -12,11 +12,17 @@ typedef enum {
 
     // OK
     EC_SUCCESS = 0,
-    // Memory allocation failed
+    // Memory allocation failed.
     EC_MEM_ALLOC = 1,
-    // Bad eulerian path
+    // Bad eulerian path.
     EC_BAD_PATH = 2,
-    // Others fails
+	// Bad euler graph.
+	EC_BAD_GRAPH = 10,
+	// Bad arguments.
+	EC_BAD_ARG = 11,
+	// Bad file.
+	EC_BAD_FILE = 12,
+    // Others fails.
     EC_OTHER = 99
 
 } ERROR_CODE;
