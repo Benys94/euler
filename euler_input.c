@@ -26,10 +26,11 @@ int check_array(uint8_t **ui, size_t el)
 	graph -> origins[0] = 1;
 	graph -> origins[1] = 1;
 
-	// setting diagonal to 0
+	// checking diagonal to 0
 	for(i=0; i<el; i++)
 	{
-		ui[i][i]=0;
+		if (ui[i][i]!=0)
+			FatalError(EC_BAD_GRAPH, "Not 0 on diagonal.");
 	}
 
 	for (i=0; i<el; i++)
@@ -119,7 +120,12 @@ int main(int argc, char *argv[])
 		FatalError(EC_BAD_ARG, "Argument error. Add name of file with graph as first argument.\n");
 	}
 
-	strcpy(file_name, argv[1]); // getting name of file from arguments
+	strcpy(file_name, argv[1]); // getting name of file from arguments or help
+	if (strcmp(file_name,"--help")==0)
+	{
+		printf("\nUse name of euler graph file as second argument to run program.\n\nProgram should be in format:\n  On first line get one int which is number of nodes.\n  Than program is reading every 1 and 0 into array of paths between nodes.\n\nExample:\n  5\n  | 0 1 1 1 1 |\n  | 1 0 0 1 0 |\n  | 1 0 0 1 1 |\n  | 1 1 1 0 1 |\n  | 1 0 1 1 0 |\n\n");
+		return 0;
+	}	
 	fp = fopen(file_name, "r"); // opening file for reading
 	if (fp == NULL)
 	{
@@ -169,8 +175,6 @@ int main(int argc, char *argv[])
 			ui[i][j] = 1;
 		}
 	}
-	fclose(fp);
-	check_array(ui, el);
 	/*
 	for (i=0; i<el; i++) 						// print
 	{
@@ -181,7 +185,10 @@ int main(int argc, char *argv[])
 		printf(" \n");
 	}
 	*/
-    freeAll();
+	fclose(fp);
+	check_array(ui, el);
+	
+	freeAll();
 
     return 0;
 }
