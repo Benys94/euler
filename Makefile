@@ -13,4 +13,4 @@ euler: $(OBJECTS)
 	gcc $(CFLAGS) -c $^ -o $@
 
 clean:
-	rm *.o $(PROGRAMS)
+	rm *.o $(PROGRAMS) 2>/dev/null || true

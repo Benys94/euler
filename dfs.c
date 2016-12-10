@@ -19,16 +19,15 @@
 long int pathCnt = 0;
 
 // Print one way through Eulerian graph
-void print_way(SWay *sOpen)
+void print_way(SWay *sOpen, FILE *outPaths)
 {
     for(SWay *tmp = sOpen; tmp -> next != NULL; tmp = tmp -> next){
-        printf("%u", tmp -> coordinates[1]);
+        fprintf(outPaths, "%u", tmp -> coordinates[1]);
         if(tmp -> next -> next != NULL){
-            printf(" -> ");
+            fprintf(outPaths, " -> ");
         }
     }
-
-    printf("\n");
+    fprintf(outPaths, "\n");
 }
 
 /**
@@ -39,21 +38,16 @@ void print_way(SWay *sOpen)
  * @param actNode Node where is algorithm located right now
  * @param actDepth Actual depth
 **/
-void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth)
+void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth, FILE *outPaths)
 {
     // Deep meter
     actDepth++;
+
     // Check if actual node is a goal
     if(actDepth == params -> depth + 1){
-        // If this is a goal print path and search next one
-        if(sOpen -> coordinates[1]){
-            print_way(sOpen);
-            pathCnt++;
-            return ;
-        }
-        else {
-            FatalError(EC_BAD_PATH, "Founded path is not eulerian.");
-        }
+        print_way(sOpen, outPaths);
+        pathCnt++;
+        return ;
     }
 
     // Expand actual node
@@ -62,7 +56,7 @@ void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth)
             // Expand operation if isn't already in stack
             if( ! in_stack(sOpen, params -> ops[i][0], params -> ops[i][1])){
                 sOpen = SPush(sOpen, params -> ops[i][0], params -> ops[i][1]);
-                pathSeeker(sOpen, params, STop(sOpen), actDepth);
+                pathSeeker(sOpen, params, STop(sOpen), actDepth, outPaths);
                 sOpen = SPop(sOpen);
             }
         }
@@ -77,6 +71,7 @@ void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth)
 void warmUp(GParams *details)
 {
     SWay *origin = SInit();
+    FILE *outPaths = fopen("paths.txt", "w");
 
     bool semiEulerian = (details -> origins[0] != details -> origins[1] ? true : false);
 
@@ -88,17 +83,14 @@ void warmUp(GParams *details)
     }
 
     printf("\n%zu nodes", details -> nodes);
-    printf("\n%zu edges\n\n", details -> depth);
+    printf("\n%zu edges\n", details -> depth);
 
 
-    for(int start = 0; start < 2; start++){
-        origin = SPush(origin, 0, details -> origins[start]);
-        pathSeeker(origin, details, details -> origins[start], 0);
-        origin = SPop(origin);
+    origin = SPush(origin, 0, details -> origins[0]);
+    pathSeeker(origin, details, details -> origins[0], 0, outPaths);
+    origin = SPop(origin);
 
-        if( ! semiEulerian)
-            break;
-    }
-
-    printf("\n\n%ld founded paths.\n", pathCnt);
+    fclose(outPaths);
+    printf("\n%ld founded paths.\n", pathCnt);
+    printf("You can see all paths in 'paths.txt'\n");
 }
