@@ -73,15 +73,20 @@ void print_help(TErrCode err) {
       break;
   }
   printf (
+    "\nGenerator of random graph with n nodes, e edges and specified property.\n"
+    "The graph is represented by adjacency matrix in output file matrix.txt.\n\n"
     "Usage:\n"
-    "generator <n> <e> (-r | -c | -e | -E)\n"
-    "generator -h | --help\n\n"
+    "./generator <n> <e> (-r | -c | -e | -E)\n"
+    "./generator -h | --help\n\n"
+    "Arguments:\n"
+    "<n>                   Number of nodes.\n"
+    "<e>                   Number of edges.\n\n"
     "Options:\n"
-    "-h --help            Show this screen.\n"
-    "-r --random          Generate random graph.\n"
-    "-r --connected       Generate connected random graph.\n"
-    "-e --eulerian-trail  Generate random graph with eulerian trail.\n"
-    "-e --eulerian-cycle  Generate random graph with eulerian cycle.\n"
+    "-h, --help            Show this screen.\n"
+    "-r, --random          Generate random graph.\n"
+    "-c, --connected       Generate connected random graph.\n"
+    "-e, --eulerian-trail  Generate random graph with Eulerian trail.\n"
+    "-E, --eulerian-cycle  Generate random graph with Eulerian cycle.\n"
   );
   exit(exitCode);
 }
@@ -169,6 +174,7 @@ void connected_random_graph(uint8_t *matrix, int nodes, int edges) {
 	
 	//Allocate memory for auxilliary array
 	if ((aux_array = (int *) malloc(nodes * sizeof(int))) == NULL) {
+    free(matrix);
 		perror("malloc");
 		exit(1);
 	}
