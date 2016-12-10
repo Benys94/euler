@@ -18,7 +18,12 @@
 
 long int pathCnt = 0;
 
-// Print one way through Eulerian graph
+/**
+ * @brief Print founded way into outut file
+ *
+ * @param sOpen Stack with valid path
+ * @param outPaths Output file
+**/
 void print_way(SWay *sOpen, FILE *outPaths)
 {
     for(SWay *tmp = sOpen; tmp -> next != NULL; tmp = tmp -> next){
@@ -33,10 +38,11 @@ void print_way(SWay *sOpen, FILE *outPaths)
 /**
  * @brief Method for recursive paths seeking in Eulerian or Semi-Eulerian graphs
  *
- * @param wrapper Wrapper for stacks
+ * @param sOpen Stack with path
  * @param params Details of a graph
  * @param actNode Node where is algorithm located right now
  * @param actDepth Actual depth
+ * @param outPaths Output file with all founded paths
 **/
 void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth, FILE *outPaths)
 {
@@ -73,24 +79,20 @@ void warmUp(GParams *details)
     SWay *origin = SInit();
     FILE *outPaths = fopen("paths.txt", "w");
 
-    bool semiEulerian = (details -> origins[0] != details -> origins[1] ? true : false);
-
-    if(semiEulerian){
+    if (details -> origins[0] != details -> origins[1]){
         printf("Searching paths in Semi-Eulerian graph.");
     }
     else {
         printf("Searching paths in Eulerian graph.");
     }
 
-    printf("\n%zu nodes", details -> nodes);
-    printf("\n%zu edges\n", details -> depth);
-
+    printf("\n%zu nodes\n%zu edges\n\n", details -> nodes, details -> depth);
 
     origin = SPush(origin, 0, details -> origins[0]);
     pathSeeker(origin, details, details -> origins[0], 0, outPaths);
     origin = SPop(origin);
 
     fclose(outPaths);
-    printf("\n%ld founded paths.\n", pathCnt);
+    printf("Total paths: %ld\n", pathCnt);
     printf("You can see all paths in 'paths.txt'\n");
 }
