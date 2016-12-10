@@ -8,10 +8,13 @@
 
 #include "generator.h"
 
-int main() {
-  int n = 8, e = 14;  //Specifying the number of nodes and edges that would be processed
+int main(int argc, char *argv[]) {
+  int n, e;  //Specifying the number of nodes and edges that would be processed
+  TProperty property;
 	uint8_t *matrix;
 	
+  //Checking arguments
+  checkArgs(argc, argv, &n, &e, &property);
 	//Seed the generator of random numbers
 	srand(time(NULL));
   //Allocate memory for adjacency matrix
@@ -21,7 +24,7 @@ int main() {
 	}
   
 	//Create random graph with selected property and parameters
-	graph_generating_manager(matrix, n, e, EULER_CYCLE);
+	graph_generating_manager(matrix, n, e, property);
 	//Print the matrix - for debugging
   matrix_printing_manager(n, matrix, false);
   //Free the memory for the matrix

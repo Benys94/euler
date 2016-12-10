@@ -9,6 +9,74 @@
 #include "generator.h"
 
 /**
+ * Function for checking arguments
+ */
+void checkArgs(int argc, char *argv[], int *nodes, int *edges, TProperty *property) {
+  char *error;
+  
+  if (argc == 1 || (argc == 2 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))) {
+    print_help(OK);
+  }
+  else if (argc != 4) {
+    print_help(ARG_NUM);
+  }
+  else {
+    *nodes = strtol(argv[1], &error, DECIMAL);
+    if (*error != '\0' || *nodes <= 0) {
+      print_help(NODES);
+    }
+    
+    *edges = strtol(argv[2], &error, DECIMAL);
+    if (*error != '\0' || *edges <= 0 || *edges > *nodes * (*nodes - 1) / 2) {
+      print_help(EDGES);
+    }
+
+    if ((strcmp(argv[3], "-r") == 0) || (strcmp(argv[3], "--random") == 0)) {
+      *property = RANDOM;
+    }
+    else if ((strcmp(argv[3], "-c") == 0) || (strcmp(argv[3], "--connected") == 0)) {
+      *property = CONNECTED;
+    }
+    else if ((strcmp(argv[3], "-e") == 0) || (strcmp(argv[3], "--eulerian-trail") == 0)) {
+      *property = EULER_TRAIL;
+    }
+    else if ((strcmp(argv[3], "-E") == 0) || (strcmp(argv[3], "--eulerian-cycle") == 0)) {
+      *property = EULER_CYCLE;
+    }
+    else {
+      print_help(PROPERTY);
+    }
+  }
+}
+
+/**
+ * Help and error printer
+ */
+void print_help(TErrCode err) {
+  int exitCode = 2;
+  
+  switch (err) {
+    case OK:
+      exitCode = 0;
+      break;
+    case ARG_NUM:
+      fprintf(stderr, "Bad number of arguments!\n\n");
+      break;
+    case NODES:
+      fprintf(stderr, "Bad number of nodes!\n\n");
+      break;
+    case EDGES:
+      fprintf(stderr, "Bad number of edges!\n\n");
+      break;
+    case PROPERTY:
+      fprintf(stderr, "Bad graph property!\n\n");
+      break;
+  }
+  printf("Help\n");
+  exit(exitCode);
+}
+
+/**
  * Swapping function
  */
 void swap(int* a1, int *a2 ) {
