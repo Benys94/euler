@@ -1,3 +1,11 @@
+/**
+ *
+ * File: euler_input.c
+ * Description: Main program for running algorithm. Checking arguments and reading file.
+ * Author: Jan Morávek <xmorav33@stud.fit.vutbr.cz>
+ *
+**/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -6,12 +14,15 @@
 #include <ctype.h>
 #include "dfs.h"
 #include "pool.h"
+#include "error.h"
 
 int check_array(uint8_t **ui, size_t el)
 {
 	size_t i, j, cnt, cnt2=0, odd=0, even=0, totalCnt=0;
 	GParams *graph = (GParams *)MemAlloc(sizeof(GParams));
-
+	if (graph == NULL){
+		FatalError(EC_MEM_ALLOC, "Malloc has failed.");}
+	graph -> nodes = el;
 	graph -> origins[0] = 1;
 	graph -> origins[1] = 1;
 
@@ -28,16 +39,14 @@ int check_array(uint8_t **ui, size_t el)
 		{
 			if(ui[i][j]!=ui[j][i]) // checking if array is symmetric
 			{
-				printf("Array is not symmetric.\n");
-				return 0;
+				FatalError(EC_BAD_GRAPH, "Array is not symmetric.");
 			}
 			cnt+=ui[i][j];
 		}
 
 		if(cnt==0)	// checking if graph is continuous (cant be 0 in every row)
 		{
-			printf("Graph is not continuous.\n");
-			return 0;
+			FatalError(EC_BAD_GRAPH, "Graph is not continuous.");
 		}
 
 
@@ -47,8 +56,7 @@ int check_array(uint8_t **ui, size_t el)
 			odd++;
 			if(odd>2)
 			{
-				printf("Graph is not euler. More than 3 odd nodes.\n");
-				return 0;
+				FatalError(EC_BAD_GRAPH, "Graph is not euler. More than 3 odd nodes.");
 			}
 			graph->origins[odd-1]=i+1; // getting starting and ending node for euler path
 		}
@@ -75,7 +83,8 @@ int check_array(uint8_t **ui, size_t el)
 	}
 
 	graph -> ops = (uint8_t**)MemAlloc(sizeof(uint8_t *) * graph->depth * 2);
-
+	if (graph->ops == NULL){
+		FatalError(EC_MEM_ALLOC, "Malloc has failed.");}
 	for(i=0; i<graph->depth*2; i++){
 		graph->ops[i] = (uint8_t *)MemAlloc(sizeof(uint8_t) * 2);
 		graph->ops[i][0] = graphNodes[i][0];
@@ -92,17 +101,6 @@ int check_array(uint8_t **ui, size_t el)
 	}*/
 	warmUp(graph);
 
-
-	if(odd==2) {
-		return 1; // graph is euler path
-	} else if(odd==0 && even==el) {
-		graph->origins[0]=1; // getting starting and ending node for euler cycle
-		graph->origins[1]=1;
-		return 2; // graph is euler cycle
-	} else {
-		return 0; // graph is not euler graph
-	}
-
 	return 0;
 }
 
@@ -115,26 +113,23 @@ int main(int argc, char *argv[])
 	char file_name[50]; // max length of file name
 	FILE *fp;
 	int c;
-	size_t tmp;
 
 	if(argc!=2)
 	{
-		printf("Argument error. Add name of file with graph as first argument.\n");
-        return 1;
+		FatalError(EC_BAD_ARG, "Argument error. Add name of file with graph as first argument.\n");
 	}
 
 	strcpy(file_name, argv[1]); // getting name of file from arguments
 	fp = fopen(file_name, "r"); // opening file for reading
 	if (fp == NULL)
 	{
-        printf("Error in opening file\n");
-        return 1;
+       FatalError(EC_BAD_FILE, "Error in opening file\n");
     }
 
 	if (fscanf(fp, "%zu", &el) != 1) // reading size of array
 	{
-        printf("Error in reading size of array\n");
-        return 1;
+		fclose(fp);
+        FatalError(EC_BAD_FILE, "Error in reading size of array\n");
     }
 
 	// skiping all whitespaces after size of array on first line
@@ -146,12 +141,18 @@ int main(int argc, char *argv[])
 	// allocation size of array
     ui = (uint8_t **) MemAlloc(el * (sizeof(uint8_t *)));
     if (ui == NULL)
-        return 1;
+	{
+		fclose(fp);
+		FatalError(EC_MEM_ALLOC, "Malloc has failed.");
+	}
 
     for (i = 0; i < el; i++) {
         ui[i] = (uint8_t *) MemAlloc(el * (sizeof(uint8_t)));
-        if (ui[i] == NULL)
-            return 1;
+        if (ui == NULL)
+		{
+			fclose(fp);
+			FatalError(EC_MEM_ALLOC, "Malloc has failed.");
+		}
     }
 
 	// filling array from file
@@ -168,6 +169,8 @@ int main(int argc, char *argv[])
 			ui[i][j] = 1;
 		}
 	}
+	fclose(fp);
+	check_array(ui, el);
 	/*
 	for (i=0; i<el; i++) 						// print
 	{
@@ -178,28 +181,6 @@ int main(int argc, char *argv[])
 		printf(" \n");
 	}
 	*/
-	tmp = check_array(ui, el);
-	if(tmp == 1)
-	{
-		printf("It is euler path. \n");
-		return 1;
-	}
-	else if(tmp == 2)
-	{
-		printf("It is euler cycle. \n");
-		return 1;
-	}
-	else if(tmp == 0)
-	{
-		printf("It is not euler graph. \n");
-		return 0;
-	}
-
-
-
-	for (i = 0; i < el; i++) // free memory
-	{
-    }
     freeAll();
 
     return 0;
