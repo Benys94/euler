@@ -16,6 +16,8 @@ typedef enum {
     EC_MEM_ALLOC = 1,
     // Bad eulerian path.
     EC_BAD_PATH = 2,
+    // Error with file manipulation.
+    EC_IO_ERROR = 3,
 	// Bad euler graph.
 	EC_BAD_GRAPH = 10,
 	// Bad arguments.
