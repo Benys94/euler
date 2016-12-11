@@ -17,7 +17,7 @@ cd ..
 cp $(pwd)/generator/matrix.txt $(pwd)
 
 #run algortihm
-./euler matrix.txt
+./euler matrix.txt --print
 mv paths.txt paths1_txt
 echo
 
@@ -31,7 +31,7 @@ cd ..
 cp $(pwd)/generator/matrix.txt $(pwd)
 
 #run algortihm
-./euler matrix.txt
+./euler matrix.txt --print
 
 
 echo
