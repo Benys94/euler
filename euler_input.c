@@ -119,9 +119,9 @@ int main(int argc, char *argv[])
 	int c;
 	bool printBo=false;
 
-	if(argc<1 || argc>3)
+	if(argc<2 || argc>3)
 	{
-		FatalError(EC_BAD_ARG, "Argument error. Add name of file with graph as first argument.\n");
+		FatalError(EC_BAD_ARG, "Argument error. Type '--help' as first argument for help.\n");
 	}
 	if(argc==3)
 	{
