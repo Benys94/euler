@@ -11,12 +11,13 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include "dfs.h"
 #include "pool.h"
 #include "error.h"
 
-int check_array(uint8_t **ui, size_t el)
+int check_array(uint8_t **ui, size_t el, bool printBo)
 {
 	size_t i, j, cnt, cnt2=0, odd=0, even=0, totalCnt=0;
 	GParams *graph = (GParams *)MemAlloc(sizeof(GParams));
@@ -25,6 +26,7 @@ int check_array(uint8_t **ui, size_t el)
 	graph -> nodes = el;
 	graph -> origins[0] = 1;
 	graph -> origins[1] = 1;
+	graph -> print = printBo;
 
 	// checking diagonal to 0
 	for(i=0; i<el; i++)
@@ -112,18 +114,32 @@ int main(int argc, char *argv[])
 	size_t el;
 	size_t i, j;
 	char file_name[50]; // max length of file name
+	char printArg[7];	
 	FILE *fp;
 	int c;
+	bool printBo=false;
 
-	if(argc!=2)
+	if(argc<1 || argc>3)
 	{
 		FatalError(EC_BAD_ARG, "Argument error. Add name of file with graph as first argument.\n");
+	}
+	if(argc==3)
+	{
+		strcpy(printArg, argv[2]);
+		if (strcmp(printArg,"--print")==0)
+		{
+			printBo=true;
+		}
+		else
+		{
+			FatalError(EC_BAD_ARG, "Argument error. Add name of file with graph as first argument.\n");
+		}	
 	}
 
 	strcpy(file_name, argv[1]); // getting name of file from arguments or help
 	if (strcmp(file_name,"--help")==0)
 	{
-		printf("\nUse name of euler graph file as second argument to run program.\n\nProgram should be in format:\n  On first line get one int which is number of nodes.\n  Than program is reading every 1 and 0 into array of paths between nodes.\n\nExample:\n  5\n  | 0 1 1 1 1 |\n  | 1 0 0 1 0 |\n  | 1 0 0 1 1 |\n  | 1 1 1 0 1 |\n  | 1 0 1 1 0 |\n\n");
+		printf("\nUse name of euler graph file as second argument to run program.\n\nProgram should be in format:\n  On first line get one int which is number of nodes.\n  Than program is reading every 1 and 0 into array of paths between nodes.\n  Type '--print' as third argument if u want to print paths to file.\n\nExample:\n  5\n  | 0 1 1 1 1 |\n  | 1 0 0 1 0 |\n  | 1 0 0 1 1 |\n  | 1 1 1 0 1 |\n  | 1 0 1 1 0 |\n\n");
 		return 0;
 	}	
 	fp = fopen(file_name, "r"); // opening file for reading
@@ -186,7 +202,7 @@ int main(int argc, char *argv[])
 	}
 	*/
 	fclose(fp);
-	check_array(ui, el);
+	check_array(ui, el, printBo);
 	
 	freeAll();
 
