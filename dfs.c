@@ -51,7 +51,9 @@ void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth, 
 
     // Check if actual node is a goal
     if(actDepth == params -> depth + 1){
-        print_way(sOpen, outPaths);
+        if(params -> print)
+            print_way(sOpen, outPaths);
+
         pathCnt++;
         return ;
     }
@@ -76,23 +78,40 @@ void pathSeeker(SWay *sOpen, GParams *params, uint8_t actNode, size_t actDepth, 
 **/
 void warmUp(GParams *details)
 {
+    // sOpen stack initialize
     SWay *origin = SInit();
-    FILE *outPaths = fopen("paths.txt", "w");
 
+    // Create file descriptor for output file
+    FILE *outPaths = NULL;
+    if(details -> print){
+        outPaths = fopen("paths.txt", "w");
+        if(outPaths == NULL)
+            FatalError(EC_IO_ERROR, "File opening has failed.");
+    }
+
+    // Print some stats
     if (details -> origins[0] != details -> origins[1]){
         printf("Searching paths in Semi-Eulerian graph.");
     }
     else {
         printf("Searching paths in Eulerian graph.");
     }
-
     printf("\n%zu nodes\n%zu edges\n\n", details -> nodes, details -> depth);
 
+    // Push origin node into stack
     origin = SPush(origin, 0, details -> origins[0]);
+
+    // Start Seeking
     pathSeeker(origin, details, details -> origins[0], 0, outPaths);
+
+    // Release last node from stack
     origin = SPop(origin);
 
-    fclose(outPaths);
+    // Print final stats
     printf("Total paths: %ld\n", pathCnt);
-    printf("You can see all paths in 'paths.txt'\n");
+
+    if(details -> print){
+        printf("You can see all paths in 'paths.txt'\n");
+        fclose(outPaths);
+    }
 }
